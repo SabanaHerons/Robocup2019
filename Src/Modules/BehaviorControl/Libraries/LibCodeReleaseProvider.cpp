@@ -4,6 +4,7 @@
 
 #include "LibCodeReleaseProvider.h"
 #include "Tools/Math/Geometry.h"
+#include <iostream>
 
 MAKE_MODULE(LibCodeReleaseProvider, behaviorControl);
 
@@ -16,6 +17,9 @@ void LibCodeReleaseProvider::update(LibCodeRelease& libCodeRelease)
 
 
     libCodeRelease.closerToTheBall = isCloserToTheBall();
+    libCodeRelease.ballInOppField = ballInOppField();
+    libCodeRelease.ballInsideOwnGoal = ballInsideOwnGoal();
+
   libCodeRelease.between = [&](float value, float min, float max) -> bool
   {
       return value >= min && value <= max;
@@ -37,6 +41,35 @@ void LibCodeReleaseProvider::update(LibCodeRelease& libCodeRelease)
   };
 
 }
+
+bool LibCodeReleaseProvider::ballInOppField(){
+  
+  bool *ballInOppField = new bool ;
+
+  if(theTeamBallModel.position.x() < 0){
+    *ballInOppField = true ;
+  }else{
+    *ballInOppField = false; 
+  }
+
+  return *ballInOppField;
+}
+
+bool LibCodeReleaseProvider::ballInsideOwnGoal(){
+
+  bool *ballInsideOwnGoal = new bool;
+
+  if (-theBallModel.estimate.position.x() < theFieldDimensions.xPosOwnPenaltyArea){
+    *ballInsideOwnGoal = true;
+  }else{
+    *ballInsideOwnGoal = false;
+  }
+
+
+return *ballInsideOwnGoal;
+}
+
+
 
 bool LibCodeReleaseProvider::isCloserToTheBall()
 {

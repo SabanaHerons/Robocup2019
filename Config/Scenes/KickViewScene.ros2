@@ -17,9 +17,6 @@
       <Body ref="Nao" name="robot3">
         <Translation z="320mm"/>
       </Body>
-      <Body ref="Nao" name="robot4">
-        <Translation z="320mm"/>
-      </Body>
     </Compound>
 
     <Compound name="extras">

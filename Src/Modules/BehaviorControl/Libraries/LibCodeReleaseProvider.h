@@ -32,6 +32,8 @@ class LibCodeReleaseProvider : public LibCodeReleaseProviderBase
 
     bool isCloserToTheBall();
     double distanceToBall;
+    bool ballInOppField();
+    bool ballInsideOwnGoal();
 
 
 };
