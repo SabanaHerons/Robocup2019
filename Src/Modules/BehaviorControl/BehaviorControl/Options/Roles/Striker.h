@@ -6,11 +6,23 @@ option(Striker)
     transition
     {
       if(state_time > 1000)
-        goto turnToBall;
+        goto lookAround;
     }
     action
     {
       HeadControlMode(HeadControl::lookForward);
+      Stand();
+    }
+  }
+  
+  state(lookAround)
+  {
+    transition
+    {
+    }
+    action
+    {
+      LookAround();
       Stand();
     }
   }

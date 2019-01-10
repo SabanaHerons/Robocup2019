@@ -18,4 +18,6 @@ FUNCTION(void(bool isMissing)) setMissingTeammate,
 (float)(0.f) angleToOwnGoal,
 (int)(0) timeSinceBallWasSeen,
 (bool)(false) closerToTheBall,
+(bool)(false) ballInOppField,
+(bool)(false) ballInsideOwnGoal,
 });
