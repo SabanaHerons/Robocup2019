@@ -59,7 +59,9 @@ bool LibCodeReleaseProvider::ballInsideOwnGoal(){
 
   bool *ballInsideOwnGoal = new bool;
 
-  if (theBallModel.estimate.position.x() > theFieldDimensions.xPosOwnPenaltyArea && theBallModel.estimate.position.y() > theFieldDimensions.yPosLeftPenaltyArea){ 
+  if (theBallModel.estimate.position.x() > theFieldDimensions.xPosOwnPenaltyArea 
+	  && theBallModel.estimate.position.y() > theFieldDimensions.yPosLeftPenaltyArea
+	  && theBallModel.estimate.position.y() < theFieldDimensions.yPosRightPenaltyArea){ 
     *ballInsideOwnGoal = true;
   }else{
     *ballInsideOwnGoal = false;
@@ -67,6 +69,26 @@ bool LibCodeReleaseProvider::ballInsideOwnGoal(){
 
 
 return *ballInsideOwnGoal;
+}
+
+bool LibCodeReleaseProvider::keeperInsidePenaltyArea()
+{
+	bool *keeperInside = new bool;
+
+	if (theRobotPose.inversePose.translation.x() > theFieldDimensions.xPosOwnPenaltyArea
+		|| theRobotPose.inversePose.translation.y() > theFieldDimensions.yPosLeftPenaltyArea
+		|| theRobotPose.inversePose.translation.y() < theFieldDimensions.yPosRightPenaltyArea)
+	{
+		*keeperInside = false;
+	}
+	else
+	{
+		*keeperInside = true;
+	}
+
+	return *keeperInside;
+
+	//return false;
 }
 
 

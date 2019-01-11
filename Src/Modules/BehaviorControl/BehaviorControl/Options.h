@@ -9,6 +9,7 @@
 
 #include "Options/HeadControl/LookForward.h"
 #include "Options/HeadControl/LookAround.h"
+#include "Options/HeadControl/LookAtBall.h"
 
 #include "Options/Output/Activity.h"
 #include "Options/Output/Annotation.h"
@@ -27,7 +28,7 @@
 
 #include "Options/Roles/Striker.h"
 //#include "Options/Roles/Defender.h"
-//#include "Options/Roles/Goalie.h"
+#include "Options/Roles/Keeper.h"
 #include "Options/Roles/StrikerPenalty.h"
 #include "Options/Roles/KeeperPenalty.h"
 

@@ -33,29 +33,29 @@ option(Goalie){
                 }
 
 								//Makes the goalie go left or jump left depending the ball speed
-                	if( 150 < theBallModel.estimate.position.y()){
+                if( 150 < theBallModel.estimate.position.y()){
 						if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
 							goto jumpLeft;
                     }else{
                         goto walkLeft;
                     }
-									}
+				}
 
 							  //If the ball is near and it's not moving, nao goes and kick it 
-									if(std::abs(theBallModel.estimate.velocity.x()) < 10  && std::abs(theBallModel.estimate.velocity.y())	< 10 && (theBallModel.estimate.position.x()) < 400 && std::abs(theBallModel.estimate.position.y()) < 150){
-										goto kickNear;
+			if(std::abs(theBallModel.estimate.velocity.x()) < 10  && std::abs(theBallModel.estimate.velocity.y())	< 10 && (theBallModel.estimate.position.x()) < 400 && std::abs(theBallModel.estimate.position.y()) < 150){
+				goto kickNear;
 									}
 
                 //If the ball goes in a straight line to the robot
 								//it stays still or sits down.
 								
-                if(-150 <= theBallModel.estimate.position.y() && theBallModel.estimate.position.y() <= 150){
-                    if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
-                        goto goDown;
-                    }else{
-                      goto stayInPlace;
-                    }
+			if(-150 <= theBallModel.estimate.position.y() && theBallModel.estimate.position.y() <= 150){
+				if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
+					goto goDown;
+                }else{
+                    goto stayInPlace;
                 }
+            }
 
 								//TODO make nao search for the ball 
 								//TODO make nao not pass the goal lines
