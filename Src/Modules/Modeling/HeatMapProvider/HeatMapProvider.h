@@ -6,7 +6,7 @@
 #include "Representations/Modeling/TeamBallModel.h"
 #include "Representations/Modeling/HeatMapRepresentation.h"
 #include "Representations/Configuration/FieldDimensions.h"
-#include "Tools/Modeling/Zone.h"
+#include "Tools/Modeling/HeatMapZone.h"
 
 MODULE(HeatMapProvider,
 {,
@@ -24,6 +24,6 @@ private:
   int pruebas;
   int prueba2;
   float sumation;
-  std::vector<Zone> zonas;
+  std::vector<HeatMapZone> zonas;
   void update(HeatMapRepresentation& heatMapRepresentation);
 };

@@ -20,13 +20,12 @@ option(Goalie){
         transition{
             //if(state_time>5000){
               //if(theLibCodeRelease.alignToGoal > -1_deg &&
-							//							theLibCodeRelease.angleToGoal < 1_deg){
+							//theLibCodeRelease.angleToGoal < 1_deg){
 							
 							
-							//makes the goalie go right or jump right depending the ball speed
-                if( -150 > theBallModel.estimate.position.y()){
-                    if(theBallModel.estimate.velocity.x() < -150 && 
-																		theBallModel.estimate.position.x() < 1000){
+			//makes the goalie go right or jump right depending the ball speed
+				if( -150 > theBallModel.estimate.position.y()){
+                    if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
                     goto jumpRight;
                   }else{
                     goto walkRight;
@@ -35,29 +34,23 @@ option(Goalie){
 
 								//Makes the goalie go left or jump left depending the ball speed
                 	if( 150 < theBallModel.estimate.position.y()){
-                    if(theBallModel.estimate.velocity.x() < -150 &&
-																		theBallModel.estimate.position.x() < 1000){
-                        goto jumpLeft;
+						if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
+							goto jumpLeft;
                     }else{
                         goto walkLeft;
                     }
 									}
 
 							  //If the ball is near and it's not moving, nao goes and kick it 
-									if(std::abs(theBallModel.estimate.velocity.x()) < 10  &&
-																	std::abs(theBallModel.estimate.velocity.y())
-																	< 10 && (theBallModel.estimate.position.x()) < 400
-																	&& std::abs(theBallModel.estimate.position.y()) < 150){
-												goto kickNear;
+									if(std::abs(theBallModel.estimate.velocity.x()) < 10  && std::abs(theBallModel.estimate.velocity.y())	< 10 && (theBallModel.estimate.position.x()) < 400 && std::abs(theBallModel.estimate.position.y()) < 150){
+										goto kickNear;
 									}
 
                 //If the ball goes in a straight line to the robot
 								//it stays still or sits down.
 								
-                if(-150 <= theBallModel.estimate.position.y() &&
-																theBallModel.estimate.position.y() <= 150){
-                    if(theBallModel.estimate.velocity.x() < -150 &&
-																		theBallModel.estimate.position.x() < 1000){
+                if(-150 <= theBallModel.estimate.position.y() && theBallModel.estimate.position.y() <= 150){
+                    if(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000){
                         goto goDown;
                     }else{
                       goto stayInPlace;
@@ -119,8 +112,7 @@ option(Goalie){
                 goto lookBall;
         }
         action{
-            WalkToTarget(Pose2f(100.f, 100.f, 100.f),
-														Pose2f(theLibCodeRelease.angleToGoal, 0.f , 0.f));
+            WalkToTarget(Pose2f(100.f, 100.f, 100.f), Pose2f(theLibCodeRelease.angleToGoal, 0.f , 0.f));
             theHeadControlMode = HeadControl::lookForward;
         }
     }
@@ -132,9 +124,7 @@ option(Goalie){
                 goto lookBall;
         }
         action{
-            WalkToTarget(Pose2f(50.f, 50.f, 50.f),
-														Pose2f(theLibCodeRelease.angleToGoal, 0.f,
-																		theBallModel.estimate.position.y()));
+            WalkToTarget(Pose2f(50.f, 50.f, 50.f), Pose2f(theLibCodeRelease.angleToGoal, 0.f, theBallModel.estimate.position.y()));
         }
     }
     
@@ -147,9 +137,7 @@ option(Goalie){
 							//goto stayInPlace;
         }
         action{
-            WalkToTarget(Pose2f(50.f, 50.f, 50.f),
-														Pose2f(theLibCodeRelease.angleToGoal, 0.f,
-																		theBallModel.estimate.position.y()));
+            WalkToTarget(Pose2f(50.f, 50.f, 50.f), Pose2f(theLibCodeRelease.angleToGoal, 0.f, theBallModel.estimate.position.y()));
         }
     }
 		
@@ -166,13 +154,14 @@ option(Goalie){
 		
     // state where it kicks the ball, takes time and action done
 		state(kickNear){
-      transition{
-			  if(state_time > 2000 || (state_time > 1000 && action_done)){
+
+		transition{
+				if(state_time > 2000 || (state_time > 1000 && action_done)){
 				  goto lookBall;		
 				}
 			}
-			action{
+		action{
 							// patada de paladines
-			}
 		}
+	}
 }

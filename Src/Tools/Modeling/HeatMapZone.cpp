@@ -1,6 +1,6 @@
-#include "Zone.h"
+#include "HeatMapZone.h"
 
-Zone::Zone(int x1_, int x2_, int y1_, int y2_)
+HeatMapZone::HeatMapZone(int x1_, int x2_, int y1_, int y2_)
 {
 	timeInside = 0;
 	initialX = x1_;
@@ -9,7 +9,7 @@ Zone::Zone(int x1_, int x2_, int y1_, int y2_)
 	finalY = y2_;
 }
 
-void Zone::updateTime(float x, float y)
+void HeatMapZone::updateTime(float x, float y)
 {
 	if(x >= initialX && x < finalX && y >= initialY && y < finalY)
 	{

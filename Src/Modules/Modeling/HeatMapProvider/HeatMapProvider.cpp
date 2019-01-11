@@ -10,7 +10,7 @@ HeatMapProvider::HeatMapProvider()
 	{
 		for(int i = int(theFieldDimensions.xPosOwnGroundline); i < int(theFieldDimensions.xPosOpponentGroundline); i += stepSizeX)
 		{
-			zonas.push_back(Zone(i,i+stepSizeX,j,j+stepSizeY));
+			zonas.push_back(HeatMapZone(i,i+stepSizeX,j,j+stepSizeY));
 		}
 	}
 	pruebas = stepSizeX;

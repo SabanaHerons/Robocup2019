@@ -46,7 +46,7 @@ bool LibCodeReleaseProvider::ballInOppField(){
   
   bool *ballInOppField = new bool ;
 
-  if(theTeamBallModel.position.x() < 0){
+  if(theTeamBallModel.position.x() > 0){
     *ballInOppField = true ;
   }else{
     *ballInOppField = false; 
@@ -59,7 +59,7 @@ bool LibCodeReleaseProvider::ballInsideOwnGoal(){
 
   bool *ballInsideOwnGoal = new bool;
 
-  if (-theBallModel.estimate.position.x() < theFieldDimensions.xPosOwnPenaltyArea){
+  if (theBallModel.estimate.position.x() > theFieldDimensions.xPosOwnPenaltyArea && theBallModel.estimate.position.y() > theFieldDimensions.yPosLeftPenaltyArea){ 
     *ballInsideOwnGoal = true;
   }else{
     *ballInsideOwnGoal = false;
