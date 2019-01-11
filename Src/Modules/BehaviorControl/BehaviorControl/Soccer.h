@@ -17,6 +17,7 @@
 #include "Representations/BehaviorControl/BehaviorStatus.h"
 #include "Representations/BehaviorControl/Libraries/LibCodeRelease.h"
 #include "Representations/Configuration/BehaviorParameters.h"
+#include "Representations/Configuration/FieldDimensions.h"
 #include "Representations/Infrastructure/CameraStatus.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Infrastructure/GameInfo.h"
@@ -61,6 +62,7 @@ BEHAVIOR_OPTION(Soccer, BehaviorOptionInterface,
   REQUIRES(GetUpEngineOutput),
   REQUIRES(GroundContactState),
   REQUIRES(HeadMotionEngineOutput),
+  REQUIRES(FieldDimensions),
   REQUIRES(JointRequest),
   REQUIRES(KeyStates),
   REQUIRES(LibCodeRelease),
