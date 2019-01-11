@@ -78,12 +78,12 @@ option(Keeper)
 		{
 			if (-150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150) // nao will make a ground punch depending of the ball location
 			{											   // or will try to kick it if its steady 
-				goto rightPunch;
+				goto preventRight;
 			}
 			else
 			{
 				if (150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150)
-					goto leftPunch;
+					goto preventLeft;
 				goto alignBehindBall;
 			}
 
@@ -166,7 +166,7 @@ option(Keeper)
 		}
 	}
 
-	state(rightPunch)
+	state(preventRight)
 	{
 		transition
 		{
@@ -176,7 +176,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::groundPunchRight);
+			SpecialAction(SpecialActionRequest::preventRight);
 		}
 	}
 
@@ -194,7 +194,7 @@ option(Keeper)
 		}
 	}
 
-	state(leftPunch)
+	state(preventLeft)
 	{
 		transition
 		{
@@ -204,7 +204,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::groundPunchLeft);
+			SpecialAction(SpecialActionRequest::preventLeft);
 		}
 	}
 
