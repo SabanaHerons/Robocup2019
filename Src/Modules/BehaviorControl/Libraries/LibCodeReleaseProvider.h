@@ -5,6 +5,7 @@
 #include "Tools/Module/Module.h"
 #include "Representations/BehaviorControl/Libraries/LibCodeRelease.h"
 #include "Representations/Infrastructure/FrameInfo.h"
+#include "Representations/Infrastructure/RobotInfo.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Modeling/TeamBallModel.h"
 #include "Representations/Modeling/RobotPose.h"
@@ -19,6 +20,7 @@ MODULE(LibCodeReleaseProvider,
   REQUIRES(FieldDimensions),
   REQUIRES(FrameInfo),
   REQUIRES(RobotPose),
+  REQUIRES(RobotInfo),
   REQUIRES(TeamData),
   USES(BehaviorStatus),
   PROVIDES(LibCodeRelease),

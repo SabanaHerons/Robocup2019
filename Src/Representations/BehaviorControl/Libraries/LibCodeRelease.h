@@ -20,4 +20,5 @@ FUNCTION(void(bool isMissing)) setMissingTeammate,
 (bool)(false) closerToTheBall,
 (bool)(false) ballInOppField,
 (bool)(false) ballInsideOwnGoal,
+(bool)(false) keeperInsideGoal,
 });

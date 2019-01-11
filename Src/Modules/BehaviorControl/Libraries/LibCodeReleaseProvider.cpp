@@ -19,6 +19,7 @@ void LibCodeReleaseProvider::update(LibCodeRelease& libCodeRelease)
     libCodeRelease.closerToTheBall = isCloserToTheBall();
     libCodeRelease.ballInOppField = ballInOppField();
     libCodeRelease.ballInsideOwnGoal = ballInsideOwnGoal();
+	libCodeRelease.keeperInsideGoal = keeperInsidePenaltyArea();
 
   libCodeRelease.between = [&](float value, float min, float max) -> bool
   {
@@ -59,9 +60,11 @@ bool LibCodeReleaseProvider::ballInsideOwnGoal(){
 
   bool *ballInsideOwnGoal = new bool;
 
-  if (theBallModel.estimate.position.x() > theFieldDimensions.xPosOwnPenaltyArea 
-	  && theBallModel.estimate.position.y() > theFieldDimensions.yPosLeftPenaltyArea
-	  && theBallModel.estimate.position.y() < theFieldDimensions.yPosRightPenaltyArea){ 
+
+  if ( Geometry::isPointInsideRectangle2(Vector2f(theFieldDimensions.xPosOwnGroundline, theFieldDimensions.yPosLeftPenaltyArea),
+	  Vector2f(theFieldDimensions.xPosOwnPenaltyArea, theFieldDimensions.yPosRightPenaltyArea),
+	  theTeamBallModel.position))
+  {
     *ballInsideOwnGoal = true;
   }else{
     *ballInsideOwnGoal = false;
@@ -75,15 +78,17 @@ bool LibCodeReleaseProvider::keeperInsidePenaltyArea()
 {
 	bool *keeperInside = new bool;
 
-	if (theRobotPose.inversePose.translation.x() > theFieldDimensions.xPosOwnPenaltyArea
-		|| theRobotPose.inversePose.translation.y() > theFieldDimensions.yPosLeftPenaltyArea
-		|| theRobotPose.inversePose.translation.y() < theFieldDimensions.yPosRightPenaltyArea)
-	{
-		*keeperInside = false;
-	}
-	else
-	{
-		*keeperInside = true;
+	if (theRobotInfo.number == 1) {
+		if (theRobotPose.inversePose.translation.x() > theFieldDimensions.xPosOwnPenaltyArea
+			|| theRobotPose.inversePose.translation.y() > theFieldDimensions.yPosLeftPenaltyArea  // if its outise return false
+			|| theRobotPose.inversePose.translation.y() < theFieldDimensions.yPosRightPenaltyArea)
+		{
+			*keeperInside = false;
+		}
+		else
+		{
+			*keeperInside = true;
+		}
 	}
 
 	return *keeperInside;

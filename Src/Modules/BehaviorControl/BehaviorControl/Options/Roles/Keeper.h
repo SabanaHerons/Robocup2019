@@ -25,44 +25,46 @@ option(Keeper)
 	{
 		transition
 		{
-			if (!theLibCodeRelease.ballInsideOwnGoal) // if the ball i not inside the penalty zone it will enter the if
-			{										  // if not it will go to an emergency state 
-				if (!(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000)) // if the ball is not coming to the robot it will enter the if 
-				{                                                                                              // if not it will make a dive, inside the if nao will mantain align with the ball 
-					if (std::abs(theLibCodeRelease.angleToOwnGoal) > 10)									   //  inside the penalty zone 
-					{
-						goto alignToGoal;
+			//if (theLibCodeRelease.keeperInsideGoal) {
+				if (!theLibCodeRelease.ballInsideOwnGoal) // if the ball i not inside the penalty zone it will enter the if
+				{										  // if not it will go to an emergency state 
+					if (!(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000)) // if the ball is not coming to the robot it will enter the if 
+					{                                                                                              // if not it will make a dive, inside the if nao will mantain align with the ball 
+						if (std::abs(theLibCodeRelease.angleToOwnGoal) > 10)									   //  inside the penalty zone 
+						{
+							goto alignToGoal;
+						}
+						else
+						{
+							if (-150 > theBallModel.estimate.position.y())
+							{
+								goto walkRight;
+							}
+
+							if (-150 > theBallModel.estimate.position.y())
+							{
+								goto walkLeft;
+							}
+						}
 					}
 					else
 					{
 						if (-150 > theBallModel.estimate.position.y())
 						{
-							goto walkRight;
+							goto rightDive;
 						}
 
-						if (-150 > theBallModel.estimate.position.y()) 
+						if (150 > theBallModel.estimate.position.y())
 						{
-							goto walkLeft;
+							goto leftDive;
 						}
 					}
 				}
 				else
 				{
-					if (-150 > theBallModel.estimate.position.y()) 
-					{
-						goto rightDive;
-					}
-
-					if (150 > theBallModel.estimate.position.y())
-					{
-						goto leftDive;
-					}
+					goto emergency;
 				}
-			}
-			else 
-			{
-				goto emergency;
-			}
+			//}
 		}
 
 		action
@@ -76,13 +78,13 @@ option(Keeper)
 	{
 		transition
 		{
-			if (-150 > theBallModel.estimate.position.y()) // nao will make a ground punch depending of the ball location
+			if (-150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150) // nao will make a ground punch depending of the ball location
 			{											   // or will try to kick it if its steady 
 				goto rightPunch;
 			}
 			else
 			{
-				if (150 > theBallModel.estimate.position.y())
+				if (150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() - 150)
 					goto leftPunch;
 				goto alignBehindBall;
 			}
