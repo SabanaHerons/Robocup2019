@@ -1,6 +1,4 @@
 //
-// Universidad De La Sabana
-// Made by Juan David Cabrera
 
 option(Keeper)
 {
@@ -80,12 +78,12 @@ option(Keeper)
 		{
 			if (-150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150) // nao will make a ground punch depending of the ball location
 			{											   // or will try to kick it if its steady 
-				goto rightPunch;
+				goto preventRight;
 			}
 			else
 			{
-				if (150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() - 150)
-					goto leftPunch;
+				if (150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150)
+					goto preventLeft;
 				goto alignBehindBall;
 			}
 
@@ -98,7 +96,7 @@ option(Keeper)
 		}
 	}
 
-	state(walkToBall)
+/*	state(walkToBall)
 	{
 		transition
 		{
@@ -113,7 +111,7 @@ option(Keeper)
 			 HeadControlMode(HeadControl::lookAtBall);
 			 WalkToTarget(Pose2f(0.5f, 0.5f, 0.5f), theBallModel.estimate.position);
 		}
-	}
+	} */
 
 	// aligns to own goal for preventing the ball
 	state(alignToGoal)
@@ -162,11 +160,13 @@ option(Keeper)
 
 		action
 		{
-			//TODO call the kick
+      theMotionRequest.motion = MotionRequest::kick;
+      theMotionRequest.kickRequest.kickMotionType = KickRequest::kickForward;
+
 		}
 	}
 
-	state(rightPunch)
+	state(preventRight)
 	{
 		transition
 		{
@@ -176,7 +176,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::groundPunchRight);
+			SpecialAction(SpecialActionRequest::preventRight);
 		}
 	}
 
@@ -194,7 +194,7 @@ option(Keeper)
 		}
 	}
 
-	state(leftPunch)
+	state(preventLeft)
 	{
 		transition
 		{
@@ -204,7 +204,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::groundPunchLeft);
+			SpecialAction(SpecialActionRequest::preventLeft);
 		}
 	}
 
