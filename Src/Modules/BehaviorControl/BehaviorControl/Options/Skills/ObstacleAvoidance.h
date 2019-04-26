@@ -6,58 +6,61 @@
 
 option(ObstacleAvoidance)
 {
-    initial_state(start) {
-	transition
-	{
-		if(state_time > 15000 && theRobotInfo.number == 2)
-		goto A;
+	initial_state(start) {
+		transition
+		{
+			if(state_time > 15000)
+				goto searchForBall;
+		}
+
+		action {
+	    
+			LookAround();
+			Stand();
+		}
 	}
 
-        action {
-	    //theMotionRequest = thePathPlanner.plan(Pose2f(3500,0,0),Pose2f(0.2f,0.2f,0.2f),true);
-            LookAround();
-            Stand();
-        }
-    }
-
-    state(A)
+	state(searchForBall)
 	{
 		transition
 		{
-			if(state_time > 6000)
-			goto B;
+			if(theTeamBallModel.isValid){//theTeamBallModel.isValid){
+				goto goForBall;
+			}
+		}
+		action
+		{
+			LookAround();
+			Stand();
+		}
+	}
+
+	state(goForBall)
+	{
+		transition
+		{
+			if(/*theLibCodeRelease.timeSinceBallWasSeen > theBehaviorParameters.ballNotSeenTimeOut)*/!theTeamBallModel.isValid)
+				goto searchForBall;
+			Vector2f relativeBall =theTeamBallModel.position-theRobotPose.translation;
+			if(relativeBall.norm() < 500.f)
+				goto llego;
 		}
 		action
 		{
 			LookForward();
-			if(theTeamBallModel.isValid)
-		{
-		    theMotionRequest = thePathPlanner.plan(Pose2f(0.f,theTeamBallModel.position.x(),theTeamBallModel.position.y()),Pose2f(0.1f,0.1f,0.1f),true);
-		}
+			theMotionRequest = thePathPlanner.plan(Pose2f(0.f,theTeamBallModel.position.x(),theTeamBallModel.position.y()),Pose2f(0.6f,0.6f,0.6f),true);
 		}
 	}
-
-	state(B)
-	{
-	transition
-		{
-		if(state_time > 5000)
-		goto A;
-		else if((theRobotPose.inversePose*theTeamBallModel.position).norm()< 500)
-			goto C;
+	state(llego){
+		transition{
+			Vector2f relativeBall =theTeamBallModel.position-theRobotPose.translation;
+			if(relativeBall.norm() > 500.f)
+				goto goForBall;
 		}
-	action
-	{
-		LookAround();
-		Stand();
+		action{
+			LookAround();
+			Stand();
+		}
 	}
-}
-	state(C)
-	{
-		action
-		{
-		Striker();
-		}
-	}	
 
 }

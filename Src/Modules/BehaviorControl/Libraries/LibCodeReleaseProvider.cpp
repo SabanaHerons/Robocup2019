@@ -21,6 +21,8 @@ void LibCodeReleaseProvider::update(LibCodeRelease& libCodeRelease)
     libCodeRelease.ballInsideOwnGoal = ballInsideOwnGoal();
 	libCodeRelease.keeperInsideGoal = keeperInsidePenaltyArea();
 
+	setPrimaryPosition(libCodeRelease);
+
   libCodeRelease.between = [&](float value, float min, float max) -> bool
   {
       return value >= min && value <= max;
@@ -80,7 +82,7 @@ bool LibCodeReleaseProvider::keeperInsidePenaltyArea()
 
 	if (theRobotInfo.number == 1) {
 		if (theRobotPose.inversePose.translation.x() > theFieldDimensions.xPosOwnPenaltyArea
-			|| theRobotPose.inversePose.translation.y() > theFieldDimensions.yPosLeftPenaltyArea  // if its outise return false
+			|| theRobotPose.inversePose.translation.y() > theFieldDimensions.yPosLeftPenaltyArea  // if its outside return false
 			|| theRobotPose.inversePose.translation.y() < theFieldDimensions.yPosRightPenaltyArea)
 		{
 			*keeperInside = false;
@@ -96,7 +98,89 @@ bool LibCodeReleaseProvider::keeperInsidePenaltyArea()
 	//return false;
 }
 
+void LibCodeReleaseProvider::setPrimaryPosition(LibCodeRelease& libCodeRelease)
+{
 
+	float lineMargin = theFieldDimensions.fieldLinesWidth * 3;
+
+	Vector2f ownRhtPenalTopCorner(theFieldDimensions.xPosOwnPenaltyArea - lineMargin, theFieldDimensions.yPosRightPenaltyArea - lineMargin);
+	Vector2f ownRhtPenalBottomCorner(theFieldDimensions.xPosOwnGroundline - lineMargin, theFieldDimensions.yPosRightPenaltyArea - lineMargin);
+	Vector2f ownLftPenalTopCorner(theFieldDimensions.xPosOwnPenaltyArea - lineMargin, theFieldDimensions.yPosLeftPenaltyArea - lineMargin);
+	Vector2f ownLftPenalBottomCorner(theFieldDimensions.xPosOwnGroundline - lineMargin, theFieldDimensions.yPosLeftPenaltyArea - lineMargin);
+
+	Vector2f oppRhtPenalBottomCorner(theFieldDimensions.xPosOpponentGroundline - lineMargin, theFieldDimensions.yPosRightPenaltyArea - lineMargin);
+	Vector2f oppLftPenalBottomCorner(theFieldDimensions.xPosOpponentGroundline - lineMargin, theFieldDimensions.yPosLeftPenaltyArea - lineMargin);
+
+	Vector2f ownRhtMiddleFieldLinePnt(theFieldDimensions.xPosOwnFieldBorder - lineMargin / 2, theFieldDimensions.yPosRightFieldBorder - lineMargin);
+	Vector2f ownLftMiddleFieldLinePnt(theFieldDimensions.xPosOwnFieldBorder - lineMargin / 2, theFieldDimensions.yPosLeftFieldBorder - lineMargin);
+
+	Vector2f middleBottomPoint(theFieldDimensions.xPosOwnGroundline / 2, theFieldDimensions.yPosCenterGoal);
+	Vector2f middleCenterPoint(theFieldDimensions.xPosHalfWayLine, theFieldDimensions.yPosCenterGoal);
+
+	Vector2f intersectionPoint(0.f, 0.f);
+
+	Geometry::Line penaltyYRightLine(ownRhtPenalBottomCorner, oppRhtPenalBottomCorner);
+	Geometry::Line penaltyYLeftLine(ownLftPenalBottomCorner, oppLftPenalBottomCorner);
+	Geometry::Line middleXFieldLine(middleBottomPoint, middleCenterPoint);
+	Geometry::Line penaltyHipoLine(ownRhtPenalTopCorner, ownLftPenalBottomCorner);
+	Geometry::Line middleYOwnFieldLine(ownRhtMiddleFieldLinePnt, ownLftMiddleFieldLinePnt);
+
+	float xPos = 0.f;
+	float yPos = 0.f;
+
+	int defenderCount = 0;
+	
+	switch (theBehaviorStatus.role)
+	{
+		
+	case Role::Defender:
+
+		if (defenderCount == 0)
+		{
+			Geometry::getIntersectionOfLines(penaltyYLeftLine, middleYOwnFieldLine, intersectionPoint);
+			xPos = intersectionPoint.x();
+			yPos = intersectionPoint.y();
+			defenderCount += 1;
+		}
+		else
+		{
+			Geometry::getIntersectionOfLines(penaltyYRightLine, middleYOwnFieldLine, intersectionPoint);
+			xPos = intersectionPoint.x();
+			yPos = intersectionPoint.y();
+		}
+
+		break;
+
+	case Role::Keeper:
+
+		Geometry::getIntersectionOfLines(penaltyHipoLine, middleXFieldLine, intersectionPoint);
+		xPos = intersectionPoint.x();
+		yPos = intersectionPoint.y();
+
+		break;
+
+	case Role::Striker:
+
+		Geometry::getIntersectionOfLines(middleYOwnFieldLine, middleXFieldLine, intersectionPoint);
+		xPos = intersectionPoint.x() + 500;
+		yPos = intersectionPoint.y();
+
+			break;
+
+		case Role::Supporter:
+
+			Geometry::getIntersectionOfLines(middleYOwnFieldLine, middleXFieldLine, intersectionPoint);
+			xPos = intersectionPoint.x() - 500;
+			yPos = intersectionPoint.y();
+
+			break;
+	}
+
+	Vector2f startingPos(xPos, yPos);
+
+	libCodeRelease.startingPos = startingPos;
+	
+}
 
 bool LibCodeReleaseProvider::isCloserToTheBall()
 {

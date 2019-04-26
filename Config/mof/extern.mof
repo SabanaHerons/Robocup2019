@@ -15,15 +15,15 @@ transition standHigh standHigh start
 transition standHighLookUp standHighLookUp start
 
 transition sitDown sitDown start
+transition preventBall preventBall start
 
-transition diveLeft diveLeft start
-transition diveRight diveRight start
+transition leftDive leftDive start
+transition rightDive rightDive start
 
 transition groundPunchLeft groundPunchLeft start
 transition groundPunchRight groundPunchRight start
 
 transition sumo sumo start
-transition ArmUp ArmUp start
 
 transition rightArm rightArm start
 transition leftArm leftArm start

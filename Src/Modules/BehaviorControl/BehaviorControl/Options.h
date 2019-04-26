@@ -27,8 +27,9 @@
 #include "Options/Output/PlaySound.h"
 
 #include "Options/Roles/Striker.h"
-//#include "Options/Roles/Defender.h"
+#include "Options/Roles/Defender.h"
 #include "Options/Roles/Keeper.h"
+#include "Options/Roles/Supporter.h"
 #include "Options/Roles/StrikerPenalty.h"
 #include "Options/Roles/KeeperPenalty.h"
 

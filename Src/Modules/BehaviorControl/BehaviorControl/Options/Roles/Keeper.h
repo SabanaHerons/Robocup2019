@@ -70,7 +70,7 @@ option(Keeper)
 		action
 		{
 			LookAround();
-			SpecialAction(SpecialActionRequest::sumo);
+			
 		}
 	}
 
@@ -190,7 +190,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::diveRight);
+			SpecialAction(SpecialActionRequest::rightDive);
 		}
 	}
 
@@ -218,7 +218,7 @@ option(Keeper)
 
 		action
 		{
-			SpecialAction(SpecialActionRequest::diveLeft);
+			SpecialAction(SpecialActionRequest::leftDive);
 		}
 	}
 

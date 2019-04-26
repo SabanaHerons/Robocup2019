@@ -21,4 +21,5 @@ FUNCTION(void(bool isMissing)) setMissingTeammate,
 (bool)(false) ballInOppField,
 (bool)(false) ballInsideOwnGoal,
 (bool)(false) keeperInsideGoal,
+(Vector2f)(Vector2f::Zero()) startingPos,
 });

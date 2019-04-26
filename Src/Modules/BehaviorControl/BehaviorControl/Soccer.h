@@ -42,6 +42,7 @@
 #include "Tools/Modeling/BallPhysics.h"
 #include "Tools/Module/Module.h"
 
+#include "Representations/Modeling/GeneticLocator.h"
 #include "Representations/BehaviorControl/PathPlanner.h"
 
 #ifdef __INTELLISENSE__
@@ -52,6 +53,7 @@
 BEHAVIOR_OPTION(Soccer, BehaviorOptionInterface,
 {,
   REQUIRES(PathPlanner),
+  //REQUIRES(GeneticLocator),
   REQUIRES(BallModel),
   REQUIRES(BehaviorParameters),
   REQUIRES(CameraStatus),
