@@ -48,6 +48,7 @@ STREAMABLE(BallModel, COMMA public BHumanMessageParticle<idBallModel>
   (unsigned)(0) timeWhenLastSeen, /**< Time stamp, indicating what its name says */
   (unsigned)(0) timeWhenDisappeared, /**< The time when the ball was not seen in the image altough it should have been there */
   (unsigned char)(0) seenPercentage, /**< How often was the ball seen in the recent past (0%...100%). */
+  (Role::RoleType)(Role::undefined) tipo,
 });
 
 /**

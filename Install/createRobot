@@ -169,7 +169,7 @@ function createBushConfig()
   message "Creating network.cfg"
 cat > "${configDir}/Robots/$robotName/network.cfg" << EOF
 name = "${robotName}";
-lan = "192.168.${teamID}.${robotPart}";
+lan = "169.254.${teamID}.${robotPart}";
 wlan = "10.0.${teamID}.${robotPart}";
 EOF
 }
@@ -182,10 +182,10 @@ function createConnectDialog()
     echo -n "sc Remote \${IP address:"
     if [ ! -z "$(ls 2>/dev/null "$bhDir"/Config/Robots/*/network.cfg)" ]; then
       for ip in $(for file in "$bhDir"/Config/Robots/*/network.cfg; do grep "^lan" "$file" | sed -e 's%[^"]*"%%' -e 's%".*%%'; done | sort); do
-        echo -n ",$ip"; 
+        echo -n ",$ip";
       done
       for ip in $(for file in "$bhDir"/Config/Robots/*/network.cfg; do grep "^wlan" "$file" | sed -e 's%[^"]*"%%' -e 's%".*%%'; done | sort); do
-        echo -n ",$ip"; 
+        echo -n ",$ip";
       done
     fi
     echo "}"

@@ -14,8 +14,25 @@
     </Compound>
 
     <Compound name="robots">
+      <Body ref="Nao" name="robot1">
+        <Translation x="4.5m" y="0m" z="320mm"/>
+  	<Rotation z="180degree"/>
+      </Body>
+      <Body ref="Nao" name="robot2">
+        <Translation x="3m" y="0m" z="320mm"/>
+	<Rotation z="180degree"/>	
+      </Body>
       <Body ref="Nao" name="robot3">
-        <Translation z="320mm"/>
+        <Translation x="3m" y="-1m" z="320mm"/>
+  	<Rotation z="180degree"/>
+      </Body>
+      <Body ref="Nao" name="robot4">
+        <Translation x="3m" y="1m" z="320mm"/>
+  	<Rotation z="180degree"/>
+      </Body>
+      <Body ref="Nao" name="robot5">
+        <Translation x="1m" y="0m" z="320mm"/>
+  	<Rotation z="180degree"/>
       </Body>
     </Compound>
 
@@ -24,7 +41,7 @@
 
     <Compound name="balls">
       <Body ref="ball">
-        <Translation x="1m" z="1m"/>
+        <Translation x="0m" z="0.5m"/>
       </Body>
     </Compound>
 

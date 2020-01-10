@@ -22,6 +22,8 @@
 #pragma once
 
 #include "KalmanFilterBallHypothesis.h"
+#include "Representations/BehaviorControl/BehaviorStatus.h"
+#include "Representations/BehaviorControl/Role.h"
 #include "Representations/Configuration/BallSpecification.h"
 #include "Representations/Configuration/FieldDimensions.h"
 #include "Representations/Infrastructure/CameraInfo.h"
@@ -42,6 +44,7 @@
 
 MODULE(BallStateEstimator,
 {,
+  USES(BehaviorStatus),
   REQUIRES(BallContactWithRobot),
   REQUIRES(BallSpecification),
   REQUIRES(BodyContour),

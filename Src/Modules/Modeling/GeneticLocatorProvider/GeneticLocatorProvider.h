@@ -3,18 +3,16 @@
 #include "Representations/Modeling/GeneticLocator.h"
 #include "Representations/Modeling/RobotPose.h"
 #include "Representations/Communication/TeamData.h"
-#include "Representations/Infrastructure/RobotInfo.h"
 #include "Representations/Modeling/BallModel.h"
-#include "Representations/Infrastructure/FrameInfo.h"
+#include "Representations/Modeling/DynamicWeight.h"
 
 MODULE(GeneticLocatorProvider,
 {,
   REQUIRES(TeamData),
+  REQUIRES(DynamicWeight),
   REQUIRES(TeamBallModel),
   REQUIRES(RobotPose),
-  REQUIRES(RobotInfo),
   REQUIRES(BallModel),
-  REQUIRES(FrameInfo),
   REQUIRES(GeneticLocator),
   PROVIDES(GeneticLocator),
 });
@@ -24,7 +22,7 @@ class GeneticLocatorProvider : public GeneticLocatorProviderBase
 public:
   GeneticLocator* geneticLocatorr;
 	GeneticLocatorProvider();
-	float result(int a, int b);
+	float result(int a, int b, float ballWeight, bool activates);
   std::vector<std::vector<float>> ordenador(int a, int b);
 
 private:

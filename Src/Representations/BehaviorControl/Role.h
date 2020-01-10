@@ -22,12 +22,10 @@ STREAMABLE(Role,
   ENUM(RoleType,
   {,
     undefined,
-    Keeper,
-	KeeperPenalty,
-    Defender,
-    Supporter,
-    Striker,
-	StrikerPenalty,
+    keeper,
+    striker,
+    defender,
+    supporter,
     none,
   });
 
@@ -41,7 +39,6 @@ STREAMABLE(Role,
   (RoleType)(undefined) role,
   (RoleType)(undefined) lastRole,
 });
-
 
 STREAMABLE(TeammateRoles,
 {

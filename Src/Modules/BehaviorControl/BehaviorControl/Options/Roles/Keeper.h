@@ -1,253 +1,166 @@
-//
-
 option(Keeper)
 {
-	initial_state(start)
+	initial_state(lookForBall)
 	{
 		transition
 		{
-		  if (state_time > 1000)
-			goto lookForBall;
-		}
+			if(!theLibCodeRelease.keeperInsideGoal && theLibCodeRelease.theRivalIsCloserToTheBall && (theFrameInfo.time - theBallModel.timeWhenLastSeen) < 500)
+				goto returnToArea;
 
+			if(theBallModel.estimate.velocity.x() > -100 && !theLibCodeRelease.theRivalIsCloserToTheBall && theLibCodeRelease.closerToTheBall && (theFrameInfo.time - theBallModel.timeWhenLastSeen) < 500)
+				goto despejar;
+
+			if((theLibCodeRelease.keeperInsideGoal && (theFrameInfo.time - theBallModel.timeWhenLastSeen) < 500 && theLibCodeRelease.theRivalIsCloserToTheBall) ||
+				 theTeamBallModel.position.x() > -3000)
+				goto alignToBall;
+  	}
 		action
 		{
-		  HeadControlMode(HeadControl::lookForward);
-		  Stand();
-		}
-	}
-
-	//TODO implement the keeper inside penalty area condition
-
-	state(lookForBall)
-	{
-		transition
-		{
-			//if (theLibCodeRelease.keeperInsideGoal) {
-				if (!theLibCodeRelease.ballInsideOwnGoal) // if the ball i not inside the penalty zone it will enter the if
-				{										  // if not it will go to an emergency state 
-					if (!(theBallModel.estimate.velocity.x() < -150 && theBallModel.estimate.position.x() < 1000)) // if the ball is not coming to the robot it will enter the if 
-					{                                                                                              // if not it will make a dive, inside the if nao will mantain align with the ball 
-						if (std::abs(theLibCodeRelease.angleToOwnGoal) > 10)									   //  inside the penalty zone 
-						{
-							goto alignToGoal;
-						}
-						else
-						{
-							if (-150 > theBallModel.estimate.position.y())
-							{
-								goto walkRight;
-							}
-
-							if (-150 > theBallModel.estimate.position.y())
-							{
-								goto walkLeft;
-							}
-						}
-					}
-					else
-					{
-						if (-150 > theBallModel.estimate.position.y())
-						{
-							goto rightDive;
-						}
-
-						if (150 > theBallModel.estimate.position.y())
-						{
-							goto leftDive;
-						}
-					}
-				}
-				else
-				{
-					goto emergency;
-				}
-			//}
-		}
-
-		action
-		{
-			LookAround();
-			
-		}
-	}
-
-	state(emergency)
-	{
-		transition
-		{
-			if (-150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150) // nao will make a ground punch depending of the ball location
-			{											   // or will try to kick it if its steady 
-				goto preventRight;
+			Vector2f area = {theFieldDimensions.xPosOwnGroundline + 200, 0};
+		  if((std::abs(theRobotPose.translation.x() - area[0]) + std::abs(theRobotPose.translation.y() - area[1])) < 150){
+				LookAround();
+				Stand();
 			}
-			else
+			else{
+				HeadControlMode(HeadControl::lookForward);
+				WalkToTarget(Pose2f(0.5f, 0.5f, 0.5f),Pose2f((theRobotPose.inversePose * ((Vector2f){0.f,0.f})).angle(),theRobotPose.inversePose * area));
+			}
+		}
+	}
+	state(alignToBall)
+	{
+	  transition
+	  {
+			if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 300), (theRobotPose.translation.y() + 300)))
+				goto goDown;
+			else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 3000), (theRobotPose.translation.y() - 300)))
+				goto PreventRight;
+			else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() + 300), (theRobotPose.translation.y() + 3000)))
+				goto PreventLeft;
+
+			if((theFrameInfo.time - theBallModel.timeWhenLastSeen) > 2500 && theTeamBallModel.position.x() < -3150)
+  			goto lookForBall;
+
+			if((!theLibCodeRelease.keeperInsideGoal && theLibCodeRelease.theRivalIsCloserToTheBall) ||
+				(!theLibCodeRelease.keeperInsideGoal && !theLibCodeRelease.closerToTheBall))
+				goto returnToArea;
+
+			if(theBallModel.estimate.velocity.x() > -100 && !theLibCodeRelease.theRivalIsCloserToTheBall && theLibCodeRelease.closerToTheBall)
+				goto despejar;
+	  }
+	  action
+		{
+			TrackBallA();
+
+			Vector2f toFollow;
+			float limite = 350.f;
+			//3750
+			if(theTeamBallModel.position.y() > limite){
+				toFollow = {theFieldDimensions.xPosOwnGroundline + 200, limite};
+			}else if(theTeamBallModel.position.y() < -limite){
+				toFollow = {theFieldDimensions.xPosOwnGroundline + 200, -limite};
+			}else{
+				toFollow = {theFieldDimensions.xPosOwnGroundline + 200, theTeamBallModel.position.y()};
+			}
+
+			if(std::abs(theRobotPose.translation.x() - (toFollow[0]))  + std::abs(theRobotPose.translation.y() - (toFollow[1])) < 100){
+				Stand();
+			}
+			else{
+				WalkToTarget(Pose2f(0.8f, 0.6f, 0.6f),Pose2f((theRobotPose.inversePose * ((Vector2f){theTeamBallModel.position.x(),theTeamBallModel.position.y()})).angle(),theRobotPose.inversePose * toFollow));
+			}
+		}
+	}
+
+	state(returnToArea)
+  {
+    transition
+    {
+			if(theLibCodeRelease.keeperInsideGoal)
 			{
-				if (150 > theBallModel.estimate.position.y() && theBallModel.estimate.velocity.x() < -150)
-					goto preventLeft;
-				goto alignBehindBall;
+				if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 300), (theRobotPose.translation.y() + 300)))
+					goto goDown;
+				else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 3000), (theRobotPose.translation.y() - 300)))
+					goto PreventRight;
+				else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() + 300), (theRobotPose.translation.y() + 3000)))
+					goto PreventLeft;
 			}
-
-		}
-
-		action
-		{
-			HeadControlMode(HeadControl::lookAtBall);
-			SpecialAction(SpecialActionRequest::sumo);
-		}
-	}
-
-/*	state(walkToBall)
-	{
-		transition
-		{
-			if (theLibCodeRelease.timeSinceBallWasSeen > theBehaviorParameters.ballNotSeenTimeOut)
-				goto lookForBall;
-			if (theBallModel.estimate.position.norm() < 500.f)
-				goto alignBehindBall;
-		}
-
-		action
-		{
-			 HeadControlMode(HeadControl::lookAtBall);
-			 WalkToTarget(Pose2f(0.5f, 0.5f, 0.5f), theBallModel.estimate.position);
-		}
-	} */
-
-	// aligns to own goal for preventing the ball
-	state(alignToGoal)
-	{
-		transition
-		{
-			if (std::abs(theLibCodeRelease.angleToOwnGoal) < 10_deg)
-				goto lookForBall;
-		}
-
-		action
-		{
-			WalkToTarget(Pose2f(100.f, 100.f, 100.f),Pose2f(theLibCodeRelease.angleToOwnGoal,100.f,100.f));
-		}
-	}
-
-	state(alignBehindBall)
-	{
-		transition
-		{
-			if (theLibCodeRelease.timeSinceBallWasSeen > theBehaviorParameters.ballNotSeenTimeOut)
+			if((theFrameInfo.time - theBallModel.timeWhenLastSeen) > 2500)
 				goto lookForBall;
 
-			 if (theLibCodeRelease.between(theBallModel.estimate.position.y(), 20.f, 50.f) 
-				&& theLibCodeRelease.between(theBallModel.estimate.position.x(), 140.f, 170.f)
-				 && std::abs(theLibCodeRelease.angleToOppGoal) < 10_deg)
-				goto kick;
+			if(theLibCodeRelease.keeperInsideGoal)
+				goto alignToBall;
+    }
+    action
+    {
+			Vector2f area = {theFieldDimensions.xPosOwnGroundline + 200, 0};
+			// WalkToTarget(Pose2f(0.6f, 0.6f, 0.6f),Pose2f((theRobotPose.inversePose * area).angle(),theRobotPose.inversePose * area));
+			theMotionRequest = thePathPlanner.plan(Pose2f((theRobotPose.inversePose * ((Vector2f){theTeamBallModel.position.x(),theTeamBallModel.position.y()})).angle(),area),Pose2f(0.6f, 0.6f, 0.6f),false,true);
 		}
+  }
 
-		action
-		{
-			theHeadControlMode = HeadControl::lookForward;
-			WalkToTarget(Pose2f(0.5f, 0.5f, 0.5f), Pose2f(theLibCodeRelease.angleToOppGoal, theBallModel.estimate.position.x() - 150.f, theBallModel.estimate.position.y() - 30.f));
-		}
-	}
-
-	state(kick)
+  state(PreventRight)
+  {
+    transition
+    {
+      if (state_time > 1000)
+				goto lookForBall;
+    }
+    action
+    {
+      SpecialAction(SpecialActionRequest::rightDive);
+    }
+  }
+	state(PreventLeft)
 	{
 		transition
 		{
-			if (state_time > 3000 || (state_time > 10 && action_done))
-			{
-				goto start;
-			}
+			if (state_time > 1000)
+				goto lookForBall;
 		}
-
-		action
-		{
-      theMotionRequest.motion = MotionRequest::kick;
-      theMotionRequest.kickRequest.kickMotionType = KickRequest::kickForward;
-
-		}
-	}
-
-	state(preventRight)
-	{
-		transition
-		{
-			if (state_time > 100 && action_done)
-				goto start;
-		}
-
-		action
-		{
-			SpecialAction(SpecialActionRequest::preventRight);
-		}
-	}
-
-	state(rightDive)
-	{
-		transition
-		{
-			if (state_time > 2000 || (action_done && state_time > 100))
-				goto start;
-		}
-
-		action
-		{
-			SpecialAction(SpecialActionRequest::rightDive);
-		}
-	}
-
-	state(preventLeft)
-	{
-		transition
-		{
-			if (state_time > 100 && action_done)
-				goto start;
-		}
-
-		action
-		{
-			SpecialAction(SpecialActionRequest::preventLeft);
-		}
-	}
-
-	state(leftDive)
-	{
-		transition
-		{
-			if (state_time > 13000 || (action_done && state_time > 15000))
-				goto start;
-		}
-
 		action
 		{
 			SpecialAction(SpecialActionRequest::leftDive);
 		}
 	}
 
-	state(walkRight)
+	state(goDown)
 	{
 		transition
 		{
-			if (action_done && state_time > 500)
+			if(state_time > 1000)
 				goto lookForBall;
-
 		}
-
 		action
 		{
-			WalkToTarget(Pose2f(50.f, 50.f, 50.f), Pose2f(theLibCodeRelease.angleToOwnGoal, 0.f, theBallModel.estimate.position.y()));
+			SpecialAction(SpecialActionRequest::preventBall);
 		}
 	}
 
-	state(walkLeft)
-	{
-		transition
-		{
-			if (action_done && state_time > 500)
+	state(despejar)
+  {
+    transition
+    {
+			if(theLibCodeRelease.keeperInsideGoal)
+			{
+				if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 300), (theRobotPose.translation.y() + 300)))
+					goto goDown;
+				else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() - 1000), (theRobotPose.translation.y() - 300)))
+					goto PreventRight;
+				else if(theLibCodeRelease.between(theLibCodeRelease.intersectoEnYGlobal, (theRobotPose.translation.y() + 300), (theRobotPose.translation.y() + 1000)))
+					goto PreventLeft;
+			}
+			if((theFrameInfo.time - theBallModel.timeWhenLastSeen) > 2500)
 				goto lookForBall;
-		}
 
-		action
-		{
-			WalkToTarget(Pose2f(50.f, 50.f, 50.f), Pose2f(theLibCodeRelease.angleToOwnGoal, 0.f, theBallModel.estimate.position.y()));
-		}
-	}
+			if((!theLibCodeRelease.keeperInsideGoal && theLibCodeRelease.theRivalIsCloserToTheBall) ||
+				(!theLibCodeRelease.keeperInsideGoal && !theLibCodeRelease.closerToTheBall))
+				goto returnToArea;
+    }
+    action
+    {
+      // TrackBallA();
+			Shoot();
+    }
+  }
 }

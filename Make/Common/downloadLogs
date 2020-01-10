@@ -9,8 +9,8 @@ usage()
   echo " -d            - Delete log files after download."
   echo " --just-delete - Just delete log files."
   echo "  examples:"
-  echo "    ./downloadLogs Leonard 192.168.2.28"
-  echo "    ./downloadLogs -d Leonard 192.168.2.28"
+  echo "    ./downloadLogs Leonard 169.254.2.28"
+  echo "    ./downloadLogs -d Leonard 169.254.2.28"
   exit 1
 }
 

@@ -9,6 +9,7 @@
 
 #pragma once
 
+#include "Representations/BehaviorControl/BehaviorStatus.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Infrastructure/GameInfo.h"
 #include "Representations/Infrastructure/RobotHealth.h"
@@ -39,6 +40,7 @@ MODULE(TeamMessageHandler,
   USES(MotionRequest),
 
   // v- using for teamout
+  USES(BehaviorStatus),
   USES(FallDownState),
   USES(GroundContactState),
   USES(RawGameInfo),
@@ -59,7 +61,7 @@ MODULE(TeamMessageHandler,
 
   DEFINES_PARAMETERS(
   {,
-    (int)(333) sendInterval, /**<  Time in ms between two messages that are sent to the teammates */
+    (int)(1000) sendInterval, /**<  Time in ms between two messages that are sent to the teammates */
     (int)(4000) networkTimeout, /**< Time in ms after which teammates are considered as unconnected */
 
     (int)(5000) minTimeBetween2RejectSounds, /*< Time in ms after which another sound output is allowed */

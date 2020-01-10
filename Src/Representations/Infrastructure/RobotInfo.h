@@ -15,6 +15,8 @@
 #include "Tools/Streams/Enum.h"
 #include "Tools/Settings.h"
 
+#include "Representations/BehaviorControl/Role.h"
+
 struct RobotInfo : public RoboCup::RobotInfo, public Streamable
 {
 public:
@@ -55,7 +57,7 @@ public:
   RobotInfo();
 
   bool hasFeature(const RobotFeature feature) const;
-  
+
   std::string getPenaltyAsString() const;
 
 protected:

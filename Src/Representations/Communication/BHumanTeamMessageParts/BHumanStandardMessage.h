@@ -8,10 +8,10 @@
 
 #pragma once
 
-#include "Representations/BehaviorControl/Role.h"
 #include "Tools/Math/Eigen.h"
 #include "Tools/Modeling/Obstacle.h"
 #include "Tools/Streams/AutoStreamable.h"
+#include "Representations/BehaviorControl/Role.h"
 
 #include <cstdint>
 
@@ -104,6 +104,7 @@ STREAMABLE(BHumanStandardMessage,
   (unsigned)             ballTimeWhenLastSeen,    /**< The name says it all. */
   (unsigned)             ballTimeWhenDisappeared, /**< The name says it all. */
   (unsigned char)        ballSeenPercentage,      /**< The name says it all */
+  (Role::RoleType)       tipo,                    /**< The name says it all */
   (Vector2f)             ballVelocity,            /**< [-32768..32767 (1)] The ball velocity .*/
   (Vector2f)             ballLastPercept,         /**< [-32768..32767 (1)] The position where the last ball percept was. */
   (std::array<float, 3>) ballCovariance,          /**< The covariance matrix of the ball position. */

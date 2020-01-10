@@ -20,5 +20,6 @@ vpd plot2 module:KickEngine:refx red
 vpd plot2 module:KickEngine:comx blue
 vpd plot2 module:KickEngine:diffx orange
 vd representation:TeamBallModel
+vd representation:GeneticLocator
 vd representation:LibCodeRelease
 call Includes/Views

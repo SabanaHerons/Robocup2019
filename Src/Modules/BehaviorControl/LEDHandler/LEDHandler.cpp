@@ -155,7 +155,21 @@ void LEDHandler::setRightEye(LEDRequest& ledRequest)
   switch(theBehaviorStatus.role)
   {
     case Role::undefined:
+      break;
+    case Role::striker:
+      setEyeColor(ledRequest, false, red, LEDRequest::on);
+      break;
+    case Role::keeper:
+      setEyeColor(ledRequest, false, blue, LEDRequest::on);
+      break;
+    case Role::defender:
+      setEyeColor(ledRequest, false, yellow, LEDRequest::on);
+      break;
+    case Role::supporter:
+      setEyeColor(ledRequest, false, green, LEDRequest::on);
+      break;
     case Role::none:
+      setEyeColor(ledRequest, false, white, LEDRequest::on);
       break;
     default:
       FAIL("Unknown role.");

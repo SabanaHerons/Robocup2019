@@ -17,6 +17,8 @@ MAKE_MODULE(NaoProvider, motionInfrastructure)
 #include "Tools/Debugging/Debugging.h"
 #include "Tools/Settings.h"
 
+#include "Representations/BehaviorControl/BehaviorStatus.h"
+
 #include "libbhuman/bhuman.h"
 
 #include <cstdio>

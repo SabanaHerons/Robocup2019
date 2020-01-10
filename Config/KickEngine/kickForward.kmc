@@ -40,7 +40,7 @@
  odometryOffset = {x = 0 ; y = 0 ; z = 0 ;};
  },
  {
- duration = 1200 ;
+ duration = 800 ;
  leftFootTra1 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootTra2 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootRot1 = {x = 0 ; y = 0 ; z = 0 ;};
@@ -64,7 +64,7 @@
  odometryOffset = {x = 0 ; y = 0 ; z = 0 ;};
  },
  {
- duration = 500 ;
+ duration = 20 ;
  leftFootTra1 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootTra2 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootRot1 = {x = 0.0430358 ; y = -0.0276232 ; z = 4.19e-05 ;};
@@ -88,13 +88,13 @@
  odometryOffset = {x = 0 ; y = 0 ; z = 0 ;};
  },
  {
- duration = 120 ;
+ duration = 10;
  leftFootTra1 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootTra2 = {x = 0 ; y = -5 ; z = -230 ;};
  leftFootRot1 = {x = 0 ; y = 0 ; z = 0 ;};
  leftFootRot2 = {x = 0 ; y = 0 ; z = 0 ;};
- rightFootTra1 = {x = 100 ; y = -100 ; z = -150 ;};
- rightFootTra2 = {x = 100 ; y = -100 ; z = -150 ;};
+ rightFootTra1 = {x = 290 ; y = -100 ; z = -150 ;};
+ rightFootTra2 = {x = 290 ; y = -100 ; z = -150 ;};
  rightFootRot1 = {x = 0.2 ; y = 0 ; z = 0 ;};
  rightFootRot2 = {x = 0.2 ; y = 0 ; z = 0 ;};
  leftArmTra1 = {x = 0 ; y = 120 ; z = 80 ;};

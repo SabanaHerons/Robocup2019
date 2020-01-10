@@ -219,7 +219,7 @@ float TeamBallLocator::computeWeighting(const TeamBallLocator::Ball& ball) const
   // 1. the time that has passed since the ball was seen the last time (smaller is better)
   // 2. the distance of the observer to the ball (closer is better)
   // 3. the validity [0,..,1] of the robot's position estimate
-  
+
   // Part 1: Time *****
   // Compute a value in the interval [0,..,1], which indicates how much of the maximum possible ball age is over:
   float ballAgeRelativeToTimeout = static_cast<float>(timeSinceBallWasSeen) / static_cast<float>(ballLastSeenTimeout);
@@ -228,14 +228,14 @@ float TeamBallLocator::computeWeighting(const TeamBallLocator::Ball& ball) const
   // - the ball weight is about 0.25, if half of the maximum time is over
   // - the ball weight is close to 0, if the maximum time is almost over
   float ballAgeWeight = 1.f - std::tanh(ballAgeRelativeToTimeout * 2.f);
- 
+
   // Part 2: Angular distance *****
   const float camHeight = 550.f;
   const float angleOfCamera = std::atan(ball.pos.norm() / camHeight); // angle of camera when looking at the ball
   const float ballPositionWithPositiveDeviation = std::tan(angleOfCamera + 1_deg) * camHeight; // ball position when angle of camera is a bit different in position direction
   const float ballPositionWithNegativeDeviation = std::tan(angleOfCamera - 1_deg) * camHeight; // ball position when angle of camera is a bit different in negative direction
   const float ballDeviation = (ballPositionWithPositiveDeviation - ballPositionWithNegativeDeviation) / 2; // averaged deviation of the ball position
-  
+
   // Part 3: Combination with validity *****
   const float weighting = (ballAgeWeight / ballDeviation) * ball.poseValidity;
   return std::abs(weighting);
@@ -248,8 +248,8 @@ bool TeamBallLocator::checkForResetByGameSituation()
   if(theGameInfo.state != STATE_PLAYING && theGameInfo.state != STATE_SET)
     reset = true;
   // If the ball was out, all previous information is invalid:
-  if(theGameInfo.dropInTime == 0)
-    reset = true;
+  // if(theGameInfo.dropInTime == 0)
+  //   reset = true;
   // Same for any goal free kick:
   if(theCognitionStateChanges.lastSetPlay != SET_PLAY_GOAL_FREE_KICK && theGameInfo.setPlay == SET_PLAY_GOAL_FREE_KICK)
     reset = true;

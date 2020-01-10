@@ -35,8 +35,8 @@ GameController::GameController()
   gameInfo.setPlay = SET_PLAY_NONE;
   gameInfo.firstHalf = 1;
   gameInfo.kickingTeam = 1;
-  gameInfo.dropInTeam = 0;
-  gameInfo.dropInTime = -1;
+  // gameInfo.dropInTeam = 0;
+  // gameInfo.dropInTime = -1;
   gameInfo.secsRemaining = halfTime;
   gameInfo.secondaryTime = 0;
 }
@@ -214,13 +214,13 @@ bool GameController::handleOutCommand(const std::string& command)
   else if(command == "outByFirstTeam")
   {
     timeOfLastDropIn = Time::getCurrentSystemTime();
-    gameInfo.dropInTeam = 1;
+    // gameInfo.dropInTeam = 1;
     return true;
   }
   else if(command == "outBySecondTeam")
   {
     timeOfLastDropIn = Time::getCurrentSystemTime();
-    gameInfo.dropInTeam = 2;
+    // gameInfo.dropInTeam = 2;
     return true;
   }
   return false;
@@ -760,10 +760,10 @@ void GameController::writeGameInfo(Out& stream)
 {
   SYNC;
 
-  if(timeOfLastDropIn)
-    gameInfo.dropInTime = static_cast<uint16_t>(Time::getTimeSince(timeOfLastDropIn) / 1000);
-  else
-    gameInfo.dropInTime = -1;
+  // if(timeOfLastDropIn)
+  //   gameInfo.dropInTime = static_cast<uint16_t>(Time::getTimeSince(timeOfLastDropIn) / 1000);
+  // else
+  //   gameInfo.dropInTime = -1;
 
   const int duration = gameInfo.gamePhase == GAME_PHASE_NORMAL ? halfTime : penaltyShotTime;
   const int timePlayed = gameInfo.state == STATE_INITIAL

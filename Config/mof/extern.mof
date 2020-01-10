@@ -20,11 +20,6 @@ transition preventBall preventBall start
 transition leftDive leftDive start
 transition rightDive rightDive start
 
-transition preventLeft preventRight start
-transition preventRight preventRight start
-
-transition sumo sumo start
-
 transition rightArm rightArm start
 transition leftArm leftArm start
 

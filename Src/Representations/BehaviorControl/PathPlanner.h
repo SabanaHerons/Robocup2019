@@ -22,5 +22,5 @@ STREAMABLE(PathPlanner,
    * excludePenaltyArea Avoid the own penalty area?
    * The function returns the motion request that should be executed.
    */
-  FUNCTION(MotionRequest(const Pose2f& target, const Pose2f& speed, bool excludePenaltyArea)) plan,
+   FUNCTION(MotionRequest(const Pose2f& target, const Pose2f& speed, bool excludePenaltyArea, bool avoidBall)) plan,
 });

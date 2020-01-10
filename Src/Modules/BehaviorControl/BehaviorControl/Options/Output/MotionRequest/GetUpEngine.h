@@ -36,7 +36,7 @@ option(GetUpEngine)
   {
     transition
     {
-      if(state_time > 2000 && theFallDownState.state == FallDownState::fallen)
+      if(state_time > 2000 && (theFallDownState.state == FallDownState::fallen || theFallDownState.state == FallDownState::falling))
         goto setRequest;
     }
     action

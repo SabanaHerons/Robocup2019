@@ -22,6 +22,7 @@
 #include "Representations/Infrastructure/SensorData/JointSensorData.h"
 #include "Representations/Infrastructure/SensorData/KeyStates.h"
 #include "Representations/Infrastructure/SensorData/SystemSensorData.h"
+#include "Representations/BehaviorControl/BehaviorStatus.h"
 #include "Representations/Infrastructure/TeamInfo.h"
 #include "Tools/Module/Module.h"
 
@@ -33,6 +34,8 @@ MODULE(NaoProvider,
 
   PROVIDES(FrameInfo),
   REQUIRES(FrameInfo),
+
+  REQUIRES(BehaviorStatus),
 
   PROVIDES(FsrSensorData),
   PROVIDES(InertialSensorData),

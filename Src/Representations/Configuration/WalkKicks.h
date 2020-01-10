@@ -32,6 +32,7 @@ STREAMABLE(WalkKicks,
   {,
     none,
     forward,
+    sidewardsInner,
   }),
 
   (ENUM_INDEXED_ARRAY(WalkKick, Type)) kicks,

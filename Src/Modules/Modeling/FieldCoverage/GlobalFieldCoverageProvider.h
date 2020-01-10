@@ -10,7 +10,6 @@
 #include "Representations/Infrastructure/CognitionStateChanges.h"
 #include "Representations/Infrastructure/FrameInfo.h"
 #include "Representations/Infrastructure/GameInfo.h"
-#include "Representations/Modeling/BallDropInModel.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Modeling/FieldCoverage.h"
 #include "Representations/Modeling/GlobalFieldCoverage.h"
@@ -21,7 +20,6 @@
 
 MODULE(GlobalFieldCoverageProvider,
 {,
-  REQUIRES(BallDropInModel),
   REQUIRES(BallModel),
   REQUIRES(CognitionStateChanges),
   REQUIRES(FieldCoverage),

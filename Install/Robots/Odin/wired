@@ -3,7 +3,7 @@
 # Distributed under the terms of the GNU General Public License v2
 # $Header: $
 
-BASE_ETH0_IP="169.254.77."
+BASE_ETH0_IP="169.254.49."
 ROBOT_ID="210"
 
 depend() {

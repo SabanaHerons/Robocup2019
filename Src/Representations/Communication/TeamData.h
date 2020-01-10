@@ -12,6 +12,7 @@
 #include "Representations/Modeling/FieldCoverage.h"
 #include "Representations/Modeling/ObstacleModel.h"
 #include "Representations/Modeling/RobotPose.h"
+#include "Representations/BehaviorControl/BehaviorStatus.h"
 #include "Representations/Modeling/SideConfidence.h"
 #include "Representations/Modeling/Whistle.h"
 

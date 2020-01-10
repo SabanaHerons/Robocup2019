@@ -55,57 +55,10 @@ void GlobalFieldCoverageProvider::update(GlobalFieldCoverage& globalFieldCoverag
     setCoverageAtFieldPosition(globalFieldCoverage, theRobotPose * theBallModel.estimate.position, 0);
   setCoverageAtFieldPosition(globalFieldCoverage, theRobotPose.translation, theFrameInfo.time);
 
-  accountForBallDropIn(globalFieldCoverage);
-
   globalFieldCoverage.meanCoverage = 0;
   for(size_t i = 0; i < globalFieldCoverage.grid.size(); ++i)
     globalFieldCoverage.meanCoverage += globalFieldCoverage.grid[i].coverage;
   globalFieldCoverage.meanCoverage /= static_cast<int>(globalFieldCoverage.grid.size());
-}
-
-void GlobalFieldCoverageProvider::accountForBallDropIn(GlobalFieldCoverage& globalFieldCoverage)
-{
-  if(theGameInfo.state == STATE_PLAYING && theFrameInfo.getTimeSince(theTeamBallModel.timeWhenLastSeen) > 500
-     && theFrameInfo.getTimeSince(theBallDropInModel.lastTimeWhenBallWentOut) < maxTimeToBallDropIn)
-  {
-    const Vector2i dropInCell(static_cast<int>((theBallDropInModel.dropInPosition.x() - theFieldDimensions.xPosOwnGroundline) / cellLengthX),
-                              static_cast<int>((theBallDropInModel.dropInPosition.y() - theFieldDimensions.yPosRightSideline) / cellLengthY));
-
-    const int min = -static_cast<int>(Vector2f(theFieldDimensions.xPosOpponentGroundline, theFieldDimensions.yPosLeftSideline).squaredNorm()) / 1000;
-
-    const int yOtherLine = numOfCellsY - 1 - dropInCell.y();
-
-    const int otherLineTime = -sqr(6000) / 1000;
-    const int dropInLineTime = otherLineTime - numOfCellsX * 1000;
-
-    for(int y = 0; y < numOfCellsY; ++y)
-    {
-      if(y == dropInCell.y())
-      {
-        for(int x = 0; x < numOfCellsX; ++x)
-        {
-          globalFieldCoverage.grid[y * numOfCellsX + x].timestamp = theFrameInfo.time;
-          globalFieldCoverage.grid[y * numOfCellsX + x].coverage = dropInLineTime + (std::abs(dropInCell.x() - x) * 1000);
-        }
-      }
-      else if(y == yOtherLine)
-      {
-        for(int x = 0; x < numOfCellsX; ++x)
-        {
-          globalFieldCoverage.grid[y * numOfCellsX + x].timestamp = theFrameInfo.time;
-          globalFieldCoverage.grid[y * numOfCellsX + x].coverage = otherLineTime;
-        }
-      }
-      else
-      {
-        for(int x = 0; x < numOfCellsX; ++x)
-        {
-          globalFieldCoverage.grid[y * numOfCellsX + x].timestamp = theFrameInfo.time;
-          globalFieldCoverage.grid[y * numOfCellsX + x].coverage = min + static_cast<int>(globalFieldCoverage.grid[y * numOfCellsX + x].positionOnField.squaredNorm()) / 1000;
-        }
-      }
-    }
-  }
 }
 
 void GlobalFieldCoverageProvider::setCoverageAtFieldPosition(GlobalFieldCoverage& globalFieldCoverage, const Vector2f& positionOnField, const int coverage) const

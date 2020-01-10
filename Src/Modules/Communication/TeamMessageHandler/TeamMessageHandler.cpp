@@ -60,6 +60,7 @@ void TeamMessageHandler::generateMessage(BHumanMessageOutputGenerator& outputGen
   SEND_PARTICLE(BallModel);
   SEND_PARTICLE(RobotPose);
 
+  // SEND_PARTICLE(BehaviorStatus);
   SEND_PARTICLE(SideConfidence);
 
   SEND_PARTICLE(Whistle);
@@ -270,6 +271,7 @@ void TeamMessageHandler::parseMessageIntoBMate(Teammate& currentTeammate)
     currentTeammate.hasGroundContact = receivedMessageContainer.theBHumanStandardMessage.hasGroundContact;
 
     currentTeammate.isPenalized = receivedMessageContainer.theBHumanStandardMessage.isPenalized;
+
   }
   else
   {
@@ -283,8 +285,10 @@ void TeamMessageHandler::parseMessageIntoBMate(Teammate& currentTeammate)
       currentTeammate.timeOfLastGroundContact = currentTeammate.timeWhenLastPacketReceived - 200;
 
     currentTeammate.isPenalized = false;
+
   }
 
+  // RECEIVE_PARTICLE(BehaviorStatus);
   RECEIVE_PARTICLE(SideConfidence);
   RECEIVE_PARTICLE(RobotPose);
   RECEIVE_PARTICLE(BallModel);

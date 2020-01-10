@@ -22,7 +22,7 @@ usage()
   echo "    -v <percent>           set NAO's volume"
   echo "    -w <profile>           set wireless profile"
   echo "  examples:"
-  echo "    ./copyfiles Develop 192.168.5.14 -p 1"
+  echo "    ./copyfiles Develop 1169.254.5.14 -p 1"
   echo "    ./copyfiles Release -r 1 10.0.5.14 -r 3 10.0.0.2"
   echo "  Without -n, NAOqi will be restarted if libbhuman or libgamectrl were changed."
   exit 1
@@ -306,7 +306,7 @@ if [ ! -z $MAGICNUMBER ]; then
   if [ $MAGICNUMBER -le -1 ]; then
     if [[ $(uname) == *CYGWIN* ]]; then
       MAGICNUMBER=$(ipconfig | grep -e "${REMOTE%.*}" | head -n 1 | sed "s%.*\.%%")
-    else      
+    else
       MAGICNUMBER=$(ifconfig 2>/dev/null \
                     | grep -e "${REMOTE%.*}" \
                     | sed "s%.*\.\([0-9]*\)  *netmask.*%\1%")

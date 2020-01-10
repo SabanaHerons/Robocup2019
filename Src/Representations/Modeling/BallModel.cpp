@@ -27,6 +27,7 @@ void BallModel::operator>>(BHumanMessage& m) const
   m.theBHumanStandardMessage.ballTimeWhenLastSeen = timeWhenLastSeen;
   m.theBHumanStandardMessage.ballTimeWhenDisappeared = timeWhenDisappeared;
   m.theBHumanStandardMessage.ballSeenPercentage = seenPercentage;
+  m.theBHumanStandardMessage.tipo = tipo;
 
   m.theBHumanStandardMessage.ballCovariance[0] = estimate.covariance(0, 0);
   m.theBHumanStandardMessage.ballCovariance[1] = estimate.covariance(1, 1);
@@ -45,6 +46,7 @@ void BallModel::operator<<(const BHumanMessage& m)
 {
   estimate.position.x() = m.theBSPLStandardMessage.ball[0];
   estimate.position.y() = m.theBSPLStandardMessage.ball[1];
+  tipo = m.theBHumanStandardMessage.tipo;
 
   if(m.hasBHumanParts)
   {
@@ -57,6 +59,7 @@ void BallModel::operator<<(const BHumanMessage& m)
     timeWhenLastSeen = m.toLocalTimestamp(m.theBHumanStandardMessage.ballTimeWhenLastSeen);
     timeWhenDisappeared = m.toLocalTimestamp(m.theBHumanStandardMessage.ballTimeWhenDisappeared);
     seenPercentage = m.theBHumanStandardMessage.ballSeenPercentage;
+    tipo = m.theBHumanStandardMessage.tipo;
   }
   else
   {
@@ -74,6 +77,7 @@ void BallModel::operator<<(const BHumanMessage& m)
       timeWhenLastSeen = std::max<int>(0, Time::getCurrentSystemTime() - 200 - static_cast<int>(m.theBSPLStandardMessage.ballAge * 1000.f));
     timeWhenDisappeared = timeWhenLastSeen;
     seenPercentage = 40;
+    tipo = m.theBHumanStandardMessage.tipo;
   }
 }
 
@@ -82,6 +86,7 @@ void BallModel::verify() const
   ASSERT(std::isfinite(lastPerception.x()));
   ASSERT(std::isfinite(lastPerception.y()));
   ASSERT(seenPercentage <= 100);
+  // ASSERT(tipo <= 100);
 
   ASSERT(std::isfinite(estimate.position.x()));
   ASSERT(std::isfinite(estimate.position.y()));

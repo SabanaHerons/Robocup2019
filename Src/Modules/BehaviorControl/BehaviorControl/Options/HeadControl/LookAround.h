@@ -1,15 +1,55 @@
-option(LookAround, (float) (0.38f) tilt)
+option(LookAround, (float) (700) tiempo)
 {
-  /** Simply sets the necessary angles */
-  initial_state(lookAroundWide)
+
+  static bool direccion;
+  state(lookFront)
   {
     transition
     {
-      goto lookLeft;
+      if(state_time > tiempo){
+        if(direccion)
+          goto lookDiagonalRight;
+        else
+          goto lookDiagonalLeft;
+       }
     }
     action
     {
-      SetHeadPanTilt(0.f, -0.1f, 150_deg);
+      SetHeadPanTilt(0_deg, 10_deg, 10000);
+    }
+  }
+
+  state(lookDiagonalLeft)
+  {
+    transition
+    {
+      if(state_time > tiempo){
+        if(direccion)
+          goto lookFront;
+        else
+          goto lookLeft;
+      }
+    }
+    action
+    {
+      SetHeadPanTilt(-30_deg, 15_deg, 10000);
+    }
+  }
+
+  state(lookDiagonalRight)
+  {
+    transition
+    {
+      if(state_time > tiempo){
+        if(!direccion)
+          goto lookFront;
+        else
+          goto lookRight;
+      }
+    }
+    action
+    {
+      SetHeadPanTilt(30_deg, 15_deg, 10000);
     }
   }
 
@@ -17,25 +57,29 @@ option(LookAround, (float) (0.38f) tilt)
   {
     transition
     {
-      if(state_time > 2500)
-        goto lookRight;
+      if(state_time > tiempo){
+        direccion = true;
+        goto lookDiagonalLeft;
+      }
     }
     action
     {
-      SetHeadPanTilt(1.0f, -0.1f, 50_deg);
+      SetHeadPanTilt(-60_deg, 20_deg, 10000);
     }
   }
 
-  state(lookRight)
+  initial_state(lookRight)
   {
     transition
     {
-      if(state_time > 2500)
-        goto lookLeft;
+      if(state_time > tiempo){
+        direccion = false;
+        goto lookDiagonalRight;
+      }
     }
     action
     {
-      SetHeadPanTilt(-1.0f, -0.1f, 50_deg);
+      SetHeadPanTilt(60_deg, 20_deg, 10000);
     }
   }
 }

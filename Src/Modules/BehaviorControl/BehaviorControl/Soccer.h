@@ -28,14 +28,17 @@
 #include "Representations/Infrastructure/TeamInfo.h"
 #include "Representations/Modeling/BallModel.h"
 #include "Representations/Modeling/RobotPose.h"
-#include "Representations/Modeling/ObstacleModel.h"
+#include "Representations/Modeling/TeamBallModel.h"
 #include "Representations/MotionControl/GetUpEngineOutput.h"
 #include "Representations/MotionControl/HeadMotionEngineOutput.h"
 #include "Representations/MotionControl/HeadMotionRequest.h"
 #include "Representations/MotionControl/MotionInfo.h"
 #include "Representations/Sensing/FallDownState.h"
+#include "Representations/Communication/TeamData.h"
 #include "Representations/Sensing/GroundContactState.h"
-#include "Representations/Modeling/TeamBallModel.h"
+#include "Representations/Modeling/GeneticLocator.h"
+#include "Representations/BehaviorControl/PathPlanner.h"
+#include "Representations/Modeling/ObstacleModel.h"
 #include "Tools/Debugging/Annotation.h"
 #include "Tools/Math/Geometry.h"
 #include "Tools/Math/Random.h"
@@ -43,8 +46,7 @@
 #include "Tools/Modeling/BallPhysics.h"
 #include "Tools/Module/Module.h"
 
-#include "Representations/Modeling/GeneticLocator.h"
-#include "Representations/BehaviorControl/PathPlanner.h"
+
 
 #ifdef __INTELLISENSE__
 #define INTELLISENSE_PREFIX Soccer::
@@ -53,8 +55,6 @@
 
 BEHAVIOR_OPTION(Soccer, BehaviorOptionInterface,
 {,
-  REQUIRES(PathPlanner),
-  //REQUIRES(GeneticLocator),
   REQUIRES(BallModel),
   REQUIRES(BehaviorParameters),
   REQUIRES(CameraStatus),
@@ -63,23 +63,27 @@ BEHAVIOR_OPTION(Soccer, BehaviorOptionInterface,
   REQUIRES(GameInfo),
   REQUIRES(GetUpEngineOutput),
   REQUIRES(GroundContactState),
+  REQUIRES(GeneticLocator),
+  REQUIRES(PathPlanner),
   REQUIRES(HeadMotionEngineOutput),
-  REQUIRES(FieldDimensions),
   REQUIRES(JointRequest),
+  REQUIRES(OwnTeamInfo),
   REQUIRES(KeyStates),
   REQUIRES(LibCodeRelease),
+  REQUIRES(FieldDimensions),
   REQUIRES(MotionInfo),
   REQUIRES(RobotHealth),
   REQUIRES(RobotInfo),
   REQUIRES(RobotPose),
   REQUIRES(TeamBallModel),
+  REQUIRES(TeamData),
   REQUIRES(ObstacleModel),
-
   MODIFIES(ArmMotionRequest),
   MODIFIES(BehaviorStatus),
   MODIFIES(HeadControlMode),
   MODIFIES(HeadMotionRequest),
   MODIFIES(MotionRequest),
+
 });
 
 class Soccer : public SoccerBase, public Cabsl<Soccer>

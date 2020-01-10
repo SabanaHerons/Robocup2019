@@ -40,7 +40,7 @@ option(GetUp)
   {
     transition
     {
-      if(theFallDownState.state == FallDownState::fallen)
+      if(theFallDownState.state == FallDownState::fallen || theFallDownState.state == FallDownState::falling)
         goto standUp;
     }
     action

@@ -98,7 +98,7 @@ void BallStateEstimator::update(BallModel& ballModel)
   generateModel(ballModel);
   lastOdometryData = theOdometryData;
   lastFrameTime = theFrameInfo.time;
-  
+
   // *** Some plots and maybe later also drawings
   plotAndDraw();
 }
@@ -284,6 +284,9 @@ void BallStateEstimator::createNewStates(const Vector2f& ballPercept, const floa
 void BallStateEstimator::generateModel(BallModel& ballModel)
 {
   ballModel.seenPercentage = static_cast<unsigned char>(seenStats.average());
+
+  ballModel.tipo = theBehaviorStatus.role;
+
   if(bestState == nullptr && numberOfStates > 0)
     bestState = &states[0];
   if(bestState != nullptr)
@@ -364,7 +367,7 @@ void BallStateEstimator::integrateCollisionWithFeet()
       cov(3, 3) += addVelocityCov.y();
     }
   }
-  
+
   // Set the pointer to the best moving state (necessary for handling kicked balls)
   KalmanFilterBallHypothesis* bestMovingState = nullptr;
   if(bestState != nullptr && bestState->type == KalmanFilterBallHypothesis::moving)
@@ -385,7 +388,7 @@ void BallStateEstimator::integrateCollisionWithFeet()
       }
     }
   }
-  
+
   // HACK! Activate best moving hypothesis as ball is often not seen after a kick
   if(newVelocity.norm() > 0.f && bestMovingState != nullptr)
   {
@@ -397,7 +400,7 @@ void BallStateEstimator::integrateCollisionWithFeet()
     if(bestState->numOfMeasurements < minNumberOfMeasurementsForRollingBalls)
       bestState->numOfMeasurements = minNumberOfMeasurementsForRollingBalls;
   }
-  
+
   // Hmn, seems that we need to replace a state
   if(bestMovingState == nullptr && bestState != nullptr)
   {

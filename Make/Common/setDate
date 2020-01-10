@@ -5,7 +5,7 @@ usage()
   echo "    -f                     forces update"
   echo "    -h | --help | /h | /?  print this text"
   echo "  examples:"
-  echo "    ./setDate 192.168.5.14"
+  echo "    ./setDate 169.254.5.14"
   echo "    ./setDate 10.0.5.14 -f"
   echo "  bhuman and NAOqi will be stopped. Afterwards the robot will be rebooted."
   exit 1

@@ -8,6 +8,7 @@
 #include "Platform/BHAssert.h"
 #include "Tools/Global.h"
 #include "Tools/Settings.h"
+#include "Representations/BehaviorControl/Role.h"
 
 #include <algorithm>
 #include <limits>
@@ -38,6 +39,7 @@ BHumanStandardMessage::BHumanStandardMessage() :
   ballTimeWhenLastSeen(0),
   ballTimeWhenDisappeared(0),
   ballSeenPercentage(0),
+  tipo(Role::defender),
   ballVelocity(Vector2f::Zero()),
   ballLastPercept(Vector2f::Zero()),
   confidenceOfLastWhistleDetection(-1),
@@ -65,6 +67,7 @@ int BHumanStandardMessage::sizeOfBHumanMessage() const
          + 6 * 4 // robotPoseCovariance
          + 1 // timestampLastJumped
          + 4 // ballTimeWhenLastSeen
+         + sizeof(tipo)
          + 4 // ballTimeWhenDisappeared, ballSeenPercentage
          + 2 * 2 // ballVelocity
          + 2 * 2 // ballLastPercept
@@ -104,6 +107,7 @@ void BHumanStandardMessage::write(void* data) const
   writeVal<uint8_t>(data, static_cast<uint8_t>(timestampLastJumpedDiff_128 > 0xFE ? 0xFF : timestampLastJumpedDiff_128));
 
   writeVal<uint32_t>(data, ballTimeWhenLastSeen);
+  writeVal<Role::RoleType>(data, tipo);
   writeVal<uint32_t>(data, (ballTimeWhenDisappeared & 0xFFFFFF) | (ballSeenPercentage << 24));
   writeVal<int16_t>(data, CLIP_AND_CAST_TO_INT16(ballVelocity.x()));
   writeVal<int16_t>(data, CLIP_AND_CAST_TO_INT16(ballVelocity.y()));
@@ -199,6 +203,7 @@ bool BHumanStandardMessage::read(const void* data)
   timestampLastJumped = timestamp - (static_cast<uint32_t>(readVal<const uint8_t>(data)) << 7);
 
   ballTimeWhenLastSeen = readVal<const uint32_t>(data);
+  tipo = readVal<const Role::RoleType>(data);
   const uint32_t ballTimeWhenDisappearedSeenPercentage = readVal<const uint32_t>(data);
   ballTimeWhenDisappeared = ballTimeWhenDisappearedSeenPercentage & 0xFFFFFF;
   ballSeenPercentage = ballTimeWhenDisappearedSeenPercentage >> 24;

@@ -11,11 +11,9 @@
 #ifdef __clang__
 #pragma clang diagnostic push
 #pragma clang diagnostic ignored "-Wunknown-pragmas"
-#pragma clang diagnostic ignored "-Wunknown-warning-option"
 #pragma clang diagnostic ignored "-Wconversion"
 #pragma clang diagnostic ignored "-Wunused-variable"
 #pragma clang diagnostic ignored "-Wunused-local-typedef"
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
 #define BOOST_SIGNALS_NO_DEPRECATION_WARNING
 #include <alcommon/albroker.h>
@@ -31,8 +29,6 @@
 #include <RoboCupGameControlData.h>
 #include "UdpComm.h"
 
-static const int CHESTBUTTON_PRESS_DURATION = 3000; /**< Chest Button state changes are ignored when happening in more than 3000 ms. */
-static const int CHESTBUTTON_TIMEOUT = 300; /**< Changed Chest Button state when Chest Button was not pressed within the last 600 ms. */
 static const int BUTTON_DELAY = 30; /**< Button state changes are ignored when happening in less than 30 ms. */
 static const int GAMECONTROLLER_TIMEOUT = 2000; /**< Connected to GameController when packet was received within the last 2000 ms. */
 static const int ALIVE_DELAY = 1000; /**< Send an alive signal every 1000 ms. */
@@ -98,7 +94,6 @@ private:
   const int* teamNumberPtr; /** Points to where ALMemory stores the team number. The number be set to 0 after it was read. */
   const int* defaultTeamColour; /** Points to where ALMemory stores the default team color. */
   int teamNumber; /**< The team number. */
-  int chestButtonPressCounter; /**< Counter for pressing the chest button*/
   RoboCupGameControlData gameCtrlData; /**< The local copy of the GameController packet. */
   uint8_t previousState; /**< The game state during the previous cycle. Used to detect when LEDs have to be updated. */
   uint8_t previousGamePhase; /**< The game phase during the previous cycle. Used to detect when LEDs have to be updated. */
@@ -109,8 +104,6 @@ private:
   bool previousLeftFootButtonPressed; /**< Whether the left foot bumper was pressed during the previous cycle. */
   bool previousRightFootButtonPressed; /**< Whether the right foot bumper was pressed during the previous cycle. */
   unsigned whenChestButtonStateChanged; /**< When last state change of the chest button occured (DCM time). */
-  unsigned whenChestButtonPressed; /**< When the chest button was pressed (DCM time). */
-  unsigned whenChestButtonReleased;/**< When the chest button was released (DCM time). */
   unsigned whenLeftFootButtonStateChanged; /**< When last state change of the left foot bumper occured (DCM time). */
   unsigned whenRightFootButtonStateChanged; /**< When last state change of the right foot bumper occured (DCM time). */
   unsigned whenPacketWasReceived; /**< When the last GameController packet was received (DCM time). */
@@ -121,7 +114,6 @@ private:
    */
   void init()
   {
-    chestButtonPressCounter = 0;
     memset(&gameControllerAddress, 0, sizeof(gameControllerAddress));
     previousState = (uint8_t) -1;
     previousGamePhase = (uint8_t) -1;
@@ -131,7 +123,6 @@ private:
     previousChestButtonPressed = false;
     previousLeftFootButtonPressed = false;
     previousRightFootButtonPressed = false;
-    whenChestButtonReleased = 0;
     whenChestButtonStateChanged = 0;
     whenLeftFootButtonStateChanged = 0;
     whenRightFootButtonStateChanged = 0;
@@ -307,54 +298,35 @@ private:
       if(*playerNumber <= gameCtrlData.playersPerTeam)
       {
         bool chestButtonPressed = *buttons[chest] != 0.f;
-        bool chestButtonReleased = previousChestButtonPressed && !chestButtonPressed;
-
-        if(!previousChestButtonPressed && chestButtonPressed)
-          whenChestButtonPressed = now;
-
-        if(chestButtonReleased && now - whenChestButtonStateChanged >= BUTTON_DELAY)
+        if(chestButtonPressed != previousChestButtonPressed && now - whenChestButtonStateChanged >= BUTTON_DELAY)
         {
-          chestButtonPressCounter++;
-          chestButtonPressCounter %= 3;  // ignore triple press of a button, e.g. for sitting down
-          whenChestButtonReleased = now;
-
-          if(chestButtonPressCounter == 0)
-            whenChestButtonStateChanged = 0;  // reset last chest button state change to ignore the next press
-        }
-
-        if(chestButtonPressCounter > 0 &&
-           now - whenChestButtonStateChanged >= BUTTON_DELAY &&
-           now - whenChestButtonPressed < CHESTBUTTON_PRESS_DURATION)
-        {
-          if(now - whenChestButtonReleased >= CHESTBUTTON_TIMEOUT)
+          if(chestButtonPressed && whenChestButtonStateChanged && now - whenPacketWasReceived >= GAMECONTROLLER_TIMEOUT) // ignore first press, e.g. for getting up
           {
-            if(whenChestButtonStateChanged && now - whenPacketWasReceived >= GAMECONTROLLER_TIMEOUT)  // ignore first press, e.g. for getting up
+            RobotInfo& player = team.players[*playerNumber - 1];
+            if(player.penalty == PENALTY_NONE)
             {
-              RobotInfo& player = team.players[*playerNumber - 1];
-              if(player.penalty == PENALTY_NONE)
-              {
-                player.penalty = PENALTY_MANUAL;
-              }
-              else
-              {
-                player.penalty = PENALTY_NONE;
-                gameCtrlData.state = STATE_PLAYING;
-              }
-              publish();
+              player.penalty = PENALTY_MANUAL;
             }
-            whenChestButtonStateChanged = now;
-            chestButtonPressCounter = 0;
+            else
+            {
+              player.penalty = PENALTY_NONE;
+              gameCtrlData.state = STATE_PLAYING;
+            }
+            publish();
           }
+
+          previousChestButtonPressed = chestButtonPressed;
+          whenChestButtonStateChanged = now;
         }
-        previousChestButtonPressed = chestButtonPressed;
-        if(gameCtrlData.state == STATE_INITIAL && team.players[*playerNumber - 1].penalty == PENALTY_NONE)
+
+        if(gameCtrlData.state == STATE_INITIAL)
         {
           bool leftFootButtonPressed = *buttons[leftFootLeft] != 0.f || *buttons[leftFootRight] != 0.f;
           if(leftFootButtonPressed != previousLeftFootButtonPressed && now - whenLeftFootButtonStateChanged >= BUTTON_DELAY)
           {
             if(leftFootButtonPressed)
             {
-              team.teamColour = (team.teamColour + 1) & 3; // cycle between TEAM_BLUE .. TEAM_BLACK
+              team.teamColour = (team.teamColour + 1) % 10; // cycle between TEAM_BLUE .. TEAM_GRAY
               publish();
             }
             previousLeftFootButtonPressed = leftFootButtonPressed;

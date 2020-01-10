@@ -28,6 +28,19 @@ option(HandleGameState)
   {
     action
     {
+      if(theRobotInfo.number == 1)
+        theBehaviorStatus.role = Role::keeper;
+      else if(theRobotInfo.number == 2)
+        theBehaviorStatus.role = Role::defender;
+      else if(theRobotInfo.number == 3)
+        theBehaviorStatus.role = Role::defender;
+      else if(theRobotInfo.number == 4)
+        theBehaviorStatus.role = Role::defender;
+      else if(theRobotInfo.number == 5)
+        theBehaviorStatus.role = Role::striker;
+      else if(theRobotInfo.number == 6)
+        theBehaviorStatus.role = Role::defender;
+
       HeadControlMode(HeadControl::none);
       SetHeadPanTilt(0.f, 0.f, 150_deg);
       SpecialAction(SpecialActionRequest::standHigh);
@@ -58,7 +71,13 @@ option(HandleGameState)
   {
     action
     {
-      ReadyState();
+      if(theGameInfo.secsRemaining == 600){
+        Stand();
+        LookAround();
+      }
+      else{
+        ReadyState(false);
+      }
     }
   }
 
@@ -67,6 +86,7 @@ option(HandleGameState)
   {
     action
     {
+      LookAround();
       Stand();
     }
   }
@@ -76,7 +96,16 @@ option(HandleGameState)
   {
     action
     {
-      PlayingState();
+      /*
+      if(theRobotInfo.number==2)
+        Poste();
+      else
+      */
+      if ((theGameInfo.secondaryTime>theBehaviorParameters.timeToStart && theGameInfo.kickingTeam!= theOwnTeamInfo.teamNumber && theGameInfo.setPlay == SET_PLAY_NONE)|| state_time<=theBehaviorParameters.timeToStart){
+        LookAround();
+      }else{
+        PlayingState();
+      }
     }
   }
 }

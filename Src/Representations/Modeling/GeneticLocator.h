@@ -8,8 +8,7 @@
 
 STREAMABLE(GeneticLocator,
 {
-  //FUNCTION(bool(float value, float min, float max)) activation,
-  FUNCTION(Pose2f(const bool activates, const int ctime)) activation,
+  FUNCTION(Pose2f(const bool activates, const int ctime, const float ballWeight)) activation,
 
   (float) optimalX,
   (float) optimalY,

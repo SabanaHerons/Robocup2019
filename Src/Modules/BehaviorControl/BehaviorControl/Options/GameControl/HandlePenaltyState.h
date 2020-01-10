@@ -38,16 +38,18 @@ option(HandlePenaltyState)
   {
     transition
     {
+
       if(theRobotInfo.penalty != PENALTY_NONE)
         goto penalized;
-      else if(theGameInfo.state == STATE_INITIAL || state_time > 500)
+      if(theTeamData.teammates.size() == 0)
+        goto notPenalized;
+      if(state_time > 10000)
         goto notPenalized;
     }
     action
     {
       PlaySound("notPenalized.wav");
-      HeadControlMode(HeadControl::lookForward);
-      Stand();
+      ReadyState(true);
     }
   }
 }

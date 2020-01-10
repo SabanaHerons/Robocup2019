@@ -8,7 +8,7 @@ Conflicts=connman.service
 [Service]
 Type=oneshot
 RemainAfterExit=yes
-ExecStart=/sbin/ifconfig eth0 192.168.77.210 netmask 255.255.0.0
+ExecStart=/sbin/ifconfig eth0 169.254.49.210 netmask 255.255.0.0
 ExecStart=/sbin/ifconfig eth0 up
 ExecStop=/sbin/ifconfig eth0 down
 

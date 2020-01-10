@@ -15,3 +15,6 @@ jc press 3 call Includes/Joystick
 jc press 4 call Includes/Joystick
 
 echo dr representation:JPEGImage off
+
+vd representation:GeneticLocator
+vd representation:BallModel

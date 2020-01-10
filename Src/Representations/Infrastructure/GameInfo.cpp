@@ -142,8 +142,8 @@ void GameInfo::serialize(In* in, Out* out)
   STREAM(setPlay); // active set play (SET_PLAY_NONE, SET_PLAY_GOAL_FREE_KICK, etc)
   STREAM(firstHalf); // 1 = game in first half, 0 otherwise
   STREAM(kickingTeam); // team number
-  STREAM(dropInTeam); // team number
-  STREAM(dropInTime); // number of seconds passed since the last drop in. -1 before first dropin.
+  // STREAM(dropInTeam); // team number
+  // STREAM(dropInTime); // number of seconds passed since the last drop in. -1 before first dropin.
   STREAM(secsRemaining); // estimate of number of seconds remaining in the half.
   STREAM(secondaryTime);
   STREAM(timeLastPackageReceived); // used to decide whether a gameController is running
@@ -161,8 +161,8 @@ void GameInfo::reg()
   REG(setPlay);
   REG(firstHalf);
   REG(kickingTeam);
-  REG(dropInTeam);
-  REG(dropInTime);
+  // REG(dropInTeam);
+  // REG(dropInTime);
   REG(secsRemaining);
   REG(secondaryTime);
   REG(timeLastPackageReceived);
